@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>تقسیم دنگ رستوران</title>
+    <style>
+        body { font-family: Vazirmatn, sans-serif; direction: rtl; padding: 40px; background: #f3f3f3; }
+        .box { max-width: 400px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        input, button { width: 100%; padding: 10px; margin: 10px 0; font-size: 16px; }
+        .result { background: #dff0d8; padding: 15px; border-radius: 8px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>🍽 تقسیم دنگ رستوران</h2>
+        <form method="post">
+            <label>مبلغ کل (تومان):</label>
+            <input type="number" name="total" required>
+
+            <label>تعداد افراد:</label>
+            <input type="number" name="people" required>
+
+            <label>درصد انعام (اختیاری):</label>
+            <input type="number" name="tip" placeholder="مثلاً 10 برای 10٪">
+
+            <button type="submit">محاسبه</button>
+        </form>
+
+        {% if result %}
+            {% if result.error %}
+                <div class="result" style="background: #f8d7da; color: #721c24;">
+                    {{ result.error }}
+                </div>
+            {% else %}
+                <div class="result">
+                    <p>💰 مبلغ کل با انعام: {{ result.total }} تومان</p>
+                    <p>👤 سهم هر نفر: {{ result.per_person }} تومان</p>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+</body>
+</html>
