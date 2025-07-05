@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: split-bill-advanced
+    name: split-bill-qr
     runtime: python
     buildCommand: ""
     startCommand: "gunicorn app:app"

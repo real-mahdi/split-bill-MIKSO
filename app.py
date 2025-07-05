@@ -1,12 +1,14 @@
-from flask import Flask, render_template, request
-import datetime
+from flask import Flask, render_template, request, redirect, url_for
+import uuid, os
+import qrcode
+from io import BytesIO
+import base64
 
 app = Flask(__name__)
-history = []
+shared_data = {}
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    result = None
     if request.method == 'POST':
         names = request.form.getlist('name')
         amounts = request.form.getlist('amount')
@@ -14,7 +16,6 @@ def index():
         try:
             people = []
             total_paid = 0
-
             for i in range(len(names)):
                 name = names[i].strip()
                 amount = float(amounts[i])
@@ -53,21 +54,32 @@ def index():
                 'people': people,
                 'transactions': transactions,
                 'total': round(total_paid, 2),
-                'average': round(average, 2),
-                'date': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                'average': round(average, 2)
             }
 
-            # Add to history
-            history.append(result)
+            uid = str(uuid.uuid4())[:8]
+            shared_data[uid] = result
+
+            # Generate QR Code as base64
+            link = request.host_url.rstrip('/') + url_for('shared', uid=uid)
+            img = qrcode.make(link)
+            buffered = BytesIO()
+            img.save(buffered, format="PNG")
+            qr_img = base64.b64encode(buffered.getvalue()).decode()
+
+            return render_template('share.html', result=result, uid=uid, qr_img=qr_img, link=link)
 
         except:
-            result = {'error': 'خطا در ورودی‌ها. لطفاً فقط عدد وارد کنید.'}
+            return render_template('index.html', error='ورودی نامعتبر بود!')
 
-    return render_template('index.html', result=result)
+    return render_template('index.html')
 
-@app.route('/history')
-def view_history():
-    return render_template('history.html', history=history)
+@app.route('/share/<uid>')
+def shared(uid):
+    data = shared_data.get(uid)
+    if not data:
+        return "این لینک منقضی شده یا پیدا نشد!"
+    return render_template('shared.html', result=data)
 
 if __name__ == '__main__':
     app.run(debug=True)

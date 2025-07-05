@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>لینک اشتراکی</title>
+    <style>
+        body { font-family: sans-serif; direction: rtl; background: #eef2f3; padding: 30px; }
+        .box { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; text-align: center; }
+        img { margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h3>✅ محاسبه انجام شد!</h3>
+        <p>لینک اشتراکی شما:</p>
+        <p><a href="{{ link }}" target="_blank">{{ link }}</a></p>
+        <img src="data:image/png;base64,{{ qr_img }}" alt="QR Code" width="200">
+        <hr>
+        <h4>🔽 خلاصه تراکنش‌ها</h4>
+        {% for t in result.transactions %}
+            <p>{{ t.from }} باید {{ t.amount }} تومان به {{ t.to }} بدهد.</p>
+        {% endfor %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>نمایش دنگ اشتراکی</title>
+    <style>
+        body { font-family: sans-serif; direction: rtl; background: #f7f7f7; padding: 30px; }
+        .box { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h3>📋 دنگ ثبت‌شده</h3>
+        <p>💰 مجموع: {{ result.total }} تومان</p>
+        <p>📊 میانگین: {{ result.average }} تومان</p>
+        <hr>
+        <h4>تراکنش‌ها:</h4>
+        {% for t in result.transactions %}
+            <p>{{ t.from }} ← {{ t.to }}: {{ t.amount }} تومان</p>
+        {% endfor %}
+    </div>
+</body>
+</html>

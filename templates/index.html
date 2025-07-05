@@ -2,54 +2,41 @@
 <html lang="fa">
 <head>
     <meta charset="UTF-8">
-    <title>تقسیم پیشرفته دنگ</title>
+    <title>تقسیم دنگ</title>
     <style>
-        body { font-family: sans-serif; direction: rtl; background: #f8f9fa; padding: 30px; }
-        .box { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        body { font-family: sans-serif; direction: rtl; background: #f0f0f0; padding: 30px; }
+        .box { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; }
         .row { display: flex; gap: 10px; margin-bottom: 10px; }
         input { flex: 1; padding: 8px; }
-        button { padding: 10px 15px; margin-top: 10px; }
-        .result { margin-top: 20px; padding: 10px; background: #e2f0d9; border-radius: 8px; }
-        .transaction { background: #fff3cd; padding: 8px; margin-top: 5px; border-radius: 5px; }
+        button { padding: 10px; margin-top: 10px; }
     </style>
 </head>
 <body>
     <div class="box">
-        <h2>🍽 تقسیم دنگ پیشرفته</h2>
-        <form method="post" id="bill-form">
+        <h2>➗ تقسیم دنگ و ساخت لینک اشتراکی</h2>
+        {% if error %}
+            <div style="color: red">{{ error }}</div>
+        {% endif %}
+        <form method="post">
             <div id="people-list">
                 <div class="row">
                     <input type="text" name="name" placeholder="نام">
-                    <input type="number" name="amount" placeholder="مبلغ پرداختی (تومان)">
+                    <input type="number" name="amount" placeholder="مبلغ پرداختی">
                 </div>
             </div>
             <button type="button" onclick="addPerson()">➕ افزودن نفر</button>
             <button type="submit">محاسبه</button>
         </form>
-
-        {% if result %}
-            <div class="result">
-                <p>🔢 مجموع پرداختی: {{ result.total }} تومان</p>
-                <p>📊 میانگین سهم هر نفر: {{ result.average }} تومان</p>
-                <hr>
-                <h4>تراکنش‌های لازم:</h4>
-                {% for t in result.transactions %}
-                    <div class="transaction">{{ t.from }} باید {{ t.amount }} تومان به {{ t.to }} بدهد.</div>
-                {% endfor %}
-            </div>
-        {% endif %}
-        <hr>
-        <a href="/history">📜 مشاهده تاریخچه پرداخت‌ها</a>
     </div>
 
 <script>
-    function addPerson() {
-        const container = document.getElementById('people-list');
-        const div = document.createElement('div');
-        div.className = 'row';
-        div.innerHTML = '<input type="text" name="name" placeholder="نام"><input type="number" name="amount" placeholder="مبلغ پرداختی (تومان)">';
-        container.appendChild(div);
-    }
+function addPerson() {
+    const container = document.getElementById('people-list');
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.innerHTML = '<input type="text" name="name" placeholder="نام"><input type="number" name="amount" placeholder="مبلغ پرداختی">';
+    container.appendChild(row);
+}
 </script>
 </body>
 </html>
