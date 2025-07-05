@@ -3,9 +3,12 @@ import uuid, os
 import qrcode
 from io import BytesIO
 import base64
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 shared_data = {}
+
+EXPIRATION_HOURS = 24
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -54,7 +57,8 @@ def index():
                 'people': people,
                 'transactions': transactions,
                 'total': round(total_paid, 2),
-                'average': round(average, 2)
+                'average': round(average, 2),
+                'created_at': datetime.now()
             }
 
             uid = str(uuid.uuid4())[:8]
@@ -78,7 +82,12 @@ def index():
 def shared(uid):
     data = shared_data.get(uid)
     if not data:
-        return "این لینک منقضی شده یا پیدا نشد!"
+        return "این لینک پیدا نشد!"
+
+    created = data.get('created_at')
+    if not created or datetime.now() - created > timedelta(hours=EXPIRATION_HOURS):
+        return "⏱️ این لینک منقضی شده است (بیش از ۲۴ ساعت گذشته)."
+
     return render_template('shared.html', result=data)
 
 if __name__ == '__main__':
