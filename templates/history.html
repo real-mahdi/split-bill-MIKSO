@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>تاریخچه دنگ‌ها</title>
+    <style>
+        body { font-family: sans-serif; direction: rtl; background: #f8f9fa; padding: 30px; }
+        .box { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .entry { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>📜 تاریخچه دنگ‌ها</h2>
+        {% for entry in history %}
+            <div class="entry">
+                <strong>🕒 {{ entry.date }}</strong><br>
+                مجموع پرداختی: {{ entry.total }} تومان<br>
+                میانگین: {{ entry.average }} تومان<br>
+                تراکنش‌ها:
+                <ul>
+                    {% for t in entry.transactions %}
+                        <li>{{ t.from }} → {{ t.to }}: {{ t.amount }} تومان</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+        <a href="/">🔙 بازگشت</a>
+    </div>
+</body>
+</html>

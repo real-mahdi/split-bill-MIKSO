@@ -1,9 +1,9 @@
 services:
   - type: web
-    name: split-bill-app
+    name: split-bill-advanced
     runtime: python
     buildCommand: ""
-    startCommand: "python app.py"
+    startCommand: "gunicorn app:app"
     envVars:
       - key: FLASK_ENV
         value: production
