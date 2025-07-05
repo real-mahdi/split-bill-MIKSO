@@ -3,23 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <title>لینک اشتراکی</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body { font-family: sans-serif; direction: rtl; background: #eef2f3; padding: 30px; }
         .box { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; text-align: center; }
         img { margin-top: 15px; }
+        button { padding: 5px 10px; margin-top: 10px; }
+        .copied { color: green; margin-top: 5px; display: none; }
     </style>
 </head>
 <body>
     <div class="box">
         <h3>✅ محاسبه انجام شد!</h3>
         <p>لینک اشتراکی شما:</p>
-        <p><a href="{{ link }}" target="_blank">{{ link }}</a></p>
+        <input type="text" id="share-link" value="{{ link }}" readonly style="width: 90%; padding: 5px;">
+        <button onclick="copyLink()">📋 کپی لینک</button>
+        <div id="copy-success" class="copied">✅ لینک کپی شد!</div>
         <img src="data:image/png;base64,{{ qr_img }}" alt="QR Code" width="200">
         <hr>
         <h4>🔽 خلاصه تراکنش‌ها</h4>
         {% for t in result.transactions %}
             <p>{{ t.from }} باید {{ t.amount }} تومان به {{ t.to }} بدهد.</p>
         {% endfor %}
+        <hr>
+        <h4>📊 نمودار پرداخت‌ها</h4>
+        <canvas id="chart" width="400" height="400"></canvas>
     </div>
+
+<script>
+function copyLink() {
+    const linkInput = document.getElementById("share-link");
+    linkInput.select();
+    linkInput.setSelectionRange(0, 99999);
+    document.execCommand("copy");
+    document.getElementById("copy-success").style.display = "block";
+    setTimeout(() => {
+        document.getElementById("copy-success").style.display = "none";
+    }, 2000);
+}
+
+const chartData = {
+    labels: [{% for p in result.people %}"{{ p.name }}"{% if not loop.last %}, {% endif %}{% endfor %}],
+    datasets: [{
+        label: 'مبلغ پرداختی',
+        data: [{% for p in result.people %}{{ p.paid }}{% if not loop.last %}, {% endif %}{% endfor %}],
+        backgroundColor: ['#f87171','#60a5fa','#34d399','#facc15','#a78bfa','#fb923c']
+    }]
+};
+
+const config = {
+    type: 'pie',
+    data: chartData,
+    options: {
+        plugins: {
+            legend: { position: 'right' }
+        }
+    }
+};
+
+new Chart(document.getElementById('chart'), config);
+</script>
 </body>
 </html>
